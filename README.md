@@ -1,1 +1,37 @@
-# festival2022-game
+# ゲーム for 新風祭
+
+## 開発環境
+- windows
+- gcc 12.2.0
+
+build commands
+
+```
+mkdir build
+cd build
+g++ -c ../*.cpp -DDX_GCC_COMPILE -I"../dxlib"
+
+
+g++ *.o -o game.exe \
+../dxlib/libDxLib.a \
+../dxlib/libDxUseCLib.a \
+../dxlib/libDxDrawFunc.a \
+../dxlib/libjpeg.a \
+../dxlib/libpng.a \
+../dxlib/libzlib.a \
+../dxlib/libtiff.a \
+../dxlib/libtheora_static.a \
+../dxlib/libvorbis_static.a \
+../dxlib/libvorbisfile_static.a \
+../dxlib/libogg_static.a \
+../dxlib/libbulletdynamics.a \
+../dxlib/libbulletcollision.a \
+../dxlib/libbulletmath.a \
+../dxlib/libopusfile.a \
+../dxlib/libopus.a \
+../dxlib/libsilk_common.a \
+../dxlib/libcelt.a
+
+rm *.o
+cd ../
+```
