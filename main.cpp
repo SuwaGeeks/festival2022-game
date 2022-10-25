@@ -12,7 +12,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	// グラフィックの描画先を裏画面にセット
 	SetDrawScreen(DX_SCREEN_BACK) ;
 
-	bullet b(300, 0, 1, false);
+	Bullet b(300, 0, 1, false);
 
 	// windowsが例外スロー または ESC入力　でループ終了
 	while(!CheckHitKey(KEY_INPUT_ESCAPE) && !(ProcessMessage() < 0)){
