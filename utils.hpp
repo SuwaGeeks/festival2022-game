@@ -1,7 +1,7 @@
 #ifndef __UTILS_HPP_INCLUDED__
 #define __UTILS_HPP_INCLUDED__
 
-class utils{
+class Utils{
     private:
     
         // 画面の縦解像度
@@ -26,8 +26,8 @@ class utils{
         double windowScale = 1.0;
 
     public:
-        utils();
-        ~utils();
+        Utils();
+        ~Utils();
 };
 
 
