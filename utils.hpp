@@ -5,10 +5,10 @@ class Utils{
     private:
     
         // 画面の縦解像度
-        int displayHeight = 600;
+        int displayHeight = 800;
 
         // 画面の横解像度
-        int displayWidth = 800;
+        int displayWidth = 600;
 
         // 画面のビット深度
         int displayBitDepth = 32;
