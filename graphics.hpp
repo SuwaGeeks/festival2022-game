@@ -5,8 +5,6 @@
 #include <map>
 #include <string>
 
-struct Graph_t;
-
 extern std::map<std::string, int> graphics;
 
 void loadGraphics();
