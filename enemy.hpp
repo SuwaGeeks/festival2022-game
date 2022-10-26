@@ -3,7 +3,7 @@
 
 class Enemy {
   private:
-    int posX, posY;
+    int posX, posY, dx, dy;
 
   public:
     double act(int *x, int *y, int *dy);
