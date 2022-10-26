@@ -12,3 +12,9 @@
 
 // 敵がすぽーんする最低y座標
 #define ENEMY_SPAWN_BORDER 400
+
+// 敵の弾の発射頻度
+#define ENEMY_SHOOT_RATE 0.01
+
+// プレイヤーの移動量
+#define PLAYER_DELTA_X 0.1

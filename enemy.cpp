@@ -2,8 +2,7 @@
 #include <stdlib.h>
 #include "enemy.hpp"
 #include "graphics.hpp"
-
-#define SHOOT_RATE 0.1
+#include "settings.hpp"
 
 // コンストラクタ
 Enemy::Enemy(double x, double y, double dx, double dy){
@@ -28,7 +27,7 @@ void Enemy::act(int *x, int *y, int *dy){
 
   // 弾を撃つかどうか判断
   double ifShooting = (double)rand() / RAND_MAX;
-  if(ifShooting < SHOOT_RATE){
+  if(ifShooting < ENEMY_SHOOT_RATE){
     *dy = 1;  // 弾を撃つならdyをフラグとして1にする。
     *x = (int)(this->posX);  *y = (int)(this->posY);
   }
