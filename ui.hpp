@@ -1,6 +1,8 @@
 #ifndef __UI_HPP_INCLUDED__
 #define __UI_HPP_INCLUDED__
 
+#include <string>
+
 class Ui{
     private:
         // 画面の縦、横、bit深度
@@ -22,7 +24,7 @@ class Ui{
         int highScore;
 
     public:
-        Ui(int);
+        Ui(int, std::string);
         ~Ui();
         void renewScore(int);
         void draw();

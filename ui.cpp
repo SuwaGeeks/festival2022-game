@@ -1,9 +1,10 @@
 #include <Dxlib.h>
 #include <string.h>
 #include <algorithm>
+#include <string>
 #include "ui.hpp"
 
-Ui::Ui(int highScore){
+Ui::Ui(int highScore, std::string name){
     // 解像度、ビット深度を取得
     GetScreenState(&(this->Sx) , &(this->Sy) , &(this->Cb));
 
