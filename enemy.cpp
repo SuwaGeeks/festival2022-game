@@ -1,10 +1,10 @@
 #include <Dxlib.h>
+#include "enemy.hpp"
 
-class Enemy {
-  private:
-    int posX, posY;
+Enemy::Enemy(int x, int y, int dx, int dy){
 
-  public:
-    double act(int *x, int *y, int *dy);
-    Enemy(int x, int y, int dx, int dy);
-};
+}
+
+double Enemy::act(int *x, int *y, int *dy){
+
+}

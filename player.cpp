@@ -1,10 +1,10 @@
 #include <Dxlib.h>
+#include "player.hpp"
 
-class Player {
-  private:
-    int posX, posY;
+Player::Player(int x, int y){
 
-  public:
-    double act(int *x, int *y, int *dy);
-    Player(int x, int y);
-};
+}
+
+double Player::act(int *x, int *y, int *dy){
+
+}
