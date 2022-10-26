@@ -1,13 +1,19 @@
 #ifndef __PLAYER_HPP_INCLUDED__
 #define __PLAYER_HPP_INCLUDED__
 
+#include <string>
+
 class Enemy {
   private:
-    int posX, posY, dx, dy;
+    double posX, posY, dx, dy;
+
+    // グラフィックのKey
+    const std::string graphic = "enemy1";
 
   public:
-    double act(int *x, int *y, int *dy);
-    Enemy(int x, int y, int dx, int dy);
+    void act(int *x, int *y, int *dy);
+    Enemy(double x, double y, double dx, double dy);
+    ~Enemy();
 };
 
 #endif
