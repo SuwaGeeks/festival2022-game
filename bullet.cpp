@@ -13,11 +13,17 @@ Bullet::~Bullet(){
 
 }
 
+void Bullet::getXYF(int *x, int *y, int *isEnemy){
+    *x = (int)(this->x);
+    *y = (int)(this->y);
+    *isEnemy = (int)(this->isEnemy);
+}
+
 void Bullet::move(){
     this->y += dy;
 }
 
 void Bullet::draw(){
-    DrawGraph((int)(this->x) ,(int)(this->y) ,graphics[this->graphic] , FALSE) ;
+    DrawGraph((int)(this->x)-(this->width)/2 ,(int)(this->y)-(this->height)/2  ,graphics[this->graphic] , FALSE) ;
 }
 
