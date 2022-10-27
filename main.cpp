@@ -3,7 +3,8 @@
 #include <ctime>
 #include <cstdlib>
 #include <string>
-#include "sections.hpp"
+#include <vector>
+#include <utility>
 #include "settings.hpp"
 #include "graphics.hpp"
 #include "bullet.hpp"
@@ -17,6 +18,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	std::list<Bullet> bullet_list;
 	std::list<Enemy> enemy_list;
 
+	std::vector<std::pair<int, const char*>> scores(10, std::make_pair(0, "NO NAME"));
 	int highScore = 0;	// ハイスコア
 
 	// 開始処理
@@ -28,13 +30,15 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
     SetWindowSizeExtendRate(WINDOW_SCALE);
     if( DxLib_Init() == -1 )exit;
 	loadGraphics();
+	SetDrawScreen(DX_SCREEN_BACK);
 
-	Ui gameCTL(highScore, getName());
+	Ui gameCTL(highScore);
+	gameCTL.getName();
+	gameCTL.whowResult(scores);
 
 	// windowsが例外スロー または ESC入力　でループ終了
-	SetDrawScreen(DX_SCREEN_BACK);
 	while(!CheckHitKey(KEY_INPUT_ESCAPE) && !(ProcessMessage() < 0)){
-		ClearDrawScreen() ;
+		ClearDrawScreen();
 
 		// リスポーン処理
 		if(std::rand()%120 == 0)enemy_list.push_back(Enemy((rand()%2)? 0: WINDOW_WIDTH, rand()%ENEMY_SPAWN_BORDER, (rand()%7)-3, (rand()%4)));
@@ -84,14 +88,13 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		
 
 		// 描画処理
-		gameCTL.draw();
 		for (auto enemy: enemy_list){
 			enemy.draw();
 		}
 		for (auto bullet: bullet_list){
 			bullet.draw();
 		}
-
+		gameCTL.draw();
 
 		ScreenFlip() ;
 	}
