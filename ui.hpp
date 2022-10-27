@@ -3,6 +3,8 @@
 
 #include <string>
 
+using namespace std;
+
 class Ui{
     private:
         // 画面の縦、横、bit深度
@@ -23,11 +25,16 @@ class Ui{
         int score_1, score_2;
         int highScore;
 
+        // プレイヤー名
+        string name;
+
     public:
-        Ui(int, std::string);
+        Ui(int);
         ~Ui();
+        void getName();
         void renewScore(int);
         void draw();
+        void whowResult(std::vector<std::pair<int, const char*>>& scores);
 };
 
 #endif

@@ -1,10 +1,13 @@
 #include <Dxlib.h>
 #include <string.h>
 #include <algorithm>
+#include <utility>
+#include <vector>
 #include <string>
 #include "ui.hpp"
+#include "settings.hpp"
 
-Ui::Ui(int highScore, std::string name){
+Ui::Ui(int highScore){
     // 解像度、ビット深度を取得
     GetScreenState(&(this->Sx) , &(this->Sy) , &(this->Cb));
 
@@ -31,6 +34,84 @@ Ui::Ui(int highScore, std::string name){
 
 Ui::~Ui(){
     // scvに追記
+}
+
+void Ui::getName(){
+    int inputDelay = 0, itr = 0;
+    char name[8] = "";
+
+    int Sx, Sy, Cb;
+    int drawX, drawY;
+    int drawDisX, drawDisY;
+    GetScreenState(&Sx, &Sy, &Cb);
+
+    // フォントサイズを指定(重いみたい)
+    SetFontSize((int)(Sx/25));
+
+    // 画面上から何%にスコア名、スコアを表示するか
+    drawY = (int)(0.50*Sy);
+    drawDisY = (int)(0.60*Sy);
+
+
+    // windowsが例外スロー または ESC入力　でループ終了
+	while(!CheckHitKey(KEY_INPUT_ESCAPE) && !(ProcessMessage() < 0)){
+		// 裏画面を初期化(真っ黒にする)
+		ClearDrawScreen();
+
+        int InputChar = GetInputChar(true) ;
+
+        // 操作コード以外の文字入力があった場合のみ表示処理を行う
+        if(InputChar != 0 && InputChar >= CTRL_CODE_CMP && itr < 8)name[itr++] = InputChar;
+        if(InputChar != 0 && InputChar == CTRL_CODE_BS && itr > 0)name[--itr] = ' ';
+
+        if(InputChar != 0 && InputChar == CTRL_CODE_CR)break;
+        drawX = (int)(0.50*Sx)-GetDrawFormatStringWidth("%s", name)/2;
+        drawDisX = (int)(0.50*Sx)-GetDrawStringWidth("Type your name and press Enter.", strlen("Type your name and press Enter."))/2;
+
+        DrawString(drawX ,drawY , name, GetColor(255, 255, 255));
+        DrawString(drawDisX ,drawDisY , "Type your name and press Enter.", GetColor(255, 255, 255));
+
+		// 裏画面の内容を表画面に反映する
+		ScreenFlip() ;
+	}
+    this->name = string(name);
+}
+
+void Ui::whowResult(std::vector<std::pair<int, const char*>>& scores){
+    const int topX = 100, topY = 100;
+    const int score_center = (int)(0.50*(WINDOW_WIDTH)-GetDrawFormatStringWidth("%5s%10s%10s", "RANK","NAME","SCORE")/2);
+
+    std::vector<std::pair<int, const char*>> scores_loc;
+    scores.push_back(make_pair(this->score_1, this->name.c_str()));
+    std::copy(scores.begin(), scores.end(), std::back_inserter(scores_loc));
+
+    sort(scores_loc.begin(), scores_loc.end());
+
+    ClearDrawScreen();
+
+        // windowsが例外スロー または ESC入力　でループ終了
+	while(!CheckHitKey(KEY_INPUT_ESCAPE) && !(ProcessMessage() < 0)){
+		// 裏画面を初期化(真っ黒にする)
+		ClearDrawScreen();
+        int i = -1;
+
+        DrawFormatString(score_center, topY+40*i+5 , GetColor(255, 255, 255), "%5s%10s%10s", "RANK","NAME","SCORE");
+        // スコア表を描画
+        for (int i = 0; i < 10; i++){
+            DrawBox(topX , topY+40*i, WINDOW_WIDTH-topX, topY+3+40*i, GetColor(225, 225, 225), true);
+            DrawFormatString(score_center, topY+40*i+5 , GetColor(255, 255, 255), "%3d%14s%3s%06d", i+1,scores_loc[i].second, "", scores_loc[i].first);
+        }
+        i++;
+        DrawBox(topX , topY+40*i, WINDOW_WIDTH-topX, topY+3+40*i, GetColor(225, 225, 225), true);
+        DrawFormatString(score_center, 500 , GetColor(225, 0, 255), "YOU%14s%3s%06d" ,scores_loc[i].second, "", scores_loc[i].first);
+
+
+        int InputChar = GetInputChar(true);
+        if(InputChar != 0 && InputChar == CTRL_CODE_CR)break;
+
+		// 裏画面の内容を表画面に反映する
+		ScreenFlip() ;
+	}
 }
 
 void Ui::renewScore(int ds){
