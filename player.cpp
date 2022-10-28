@@ -8,10 +8,16 @@
 Player::Player(double x, double y){
   this->posX = x;
   this->posY = y;
+  this->remain = 2;
+  this->godTime = 0;
+  this->shotIV = 0;
 }
 
 // プレイヤーの行動
-void Player::act(double *x, double *y, double *dy){
+void Player::act(int *x, int *y, int *dy){
+
+  *x = (int)(this->posX);
+  *y = (int)(this->posY);
   // dyを初期化
   *dy = 0;
 
@@ -23,10 +29,25 @@ void Player::act(double *x, double *y, double *dy){
     this->posX += PLAYER_DELTA_X;
   }
 
-  // 玉の発射
-  if(CheckHitKey(KEY_INPUT_Z) || CheckHitKey(KEY_INPUT_SPACE)){
-    *dy = 1;
+  // 境界処理
+  if(this->posX < this->width/2){
+      this->posX = this->width/2;
   }
+  if(this->posX > WINDOW_WIDTH-this->width/2){
+      this->posX = WINDOW_WIDTH-this->width/2;
+  }
+
+  // 玉の発射
+  if(!shotIV && (CheckHitKey(KEY_INPUT_Z) || CheckHitKey(KEY_INPUT_SPACE))){
+    *dy = 1;
+    shotIV += 60;
+  }
+
+  // 無敵時間の更新
+  if(this->godTime > 0)this->godTime--;
+
+  // 発射インターバルの更新
+  if(this->shotIV > 0)this->shotIV--;
 }
 
 // ゲッタ
@@ -38,4 +59,7 @@ void Player::getXY(int *x, int *y){
 // 描画関数
 void Player::draw(){
   DrawGraph((int)(this->posX)-(this->width)/2 ,(int)(this->posY)-(this->height)/2 ,graphics[this->graphic] , FALSE);
+  for (int i = 0; i < remain; i++){
+    DrawGraph(5+i*(this->width + 5), 745, graphics[this->graphic], FALSE);
+  }
 }

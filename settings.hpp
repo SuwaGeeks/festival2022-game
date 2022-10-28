@@ -9,6 +9,11 @@
 #define WINDOW_TITLE "f2022-game"
 #define WINDOW_SCALE 1.0
 
+// 当たり判定範囲(半径)
+#define PLAYER_CD 50
+#define ENEMY_CD 50
+#define BULLET_CD 4
+
 
 // 敵がすぽーんする最低y座標
 #define ENEMY_SPAWN_BORDER 400
@@ -17,4 +22,4 @@
 #define ENEMY_SHOOT_RATE 0.01
 
 // プレイヤーの移動量
-#define PLAYER_DELTA_X 0.1
+#define PLAYER_DELTA_X 5.0

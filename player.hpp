@@ -7,12 +7,15 @@ class Player {
   private:
     double posX, posY;
     const int height = 50, width = 50;
+    int shotIV;
 
     // グラフィックのKey
-    const std::string graphic = "enemy1";
+    const std::string graphic = "player";
 
   public:
-    void act(double *x, double *y, double *dy);
+    int remain;  // 残機
+    int godTime;
+    void act(int *x, int *y, int *dy);
     void getXY(int *x, int *y);
     void draw();
     Player(double x, double y);
