@@ -6,11 +6,11 @@
 class Player {
   private:
     double posX, posY;
-    const int height = 50, width = 50;
+    const int height = 48, width = 48;
     int shotIV;
 
     // グラフィックのKey
-    const std::string graphic = "player";
+    const std::string graphic = "player1";
 
   public:
     int remain;  // 残機

@@ -6,10 +6,10 @@
 class Enemy {
   private:
     double posX, posY, dx, dy;
-    const int height = 50, width = 50;
+    const int height = 48, width = 48;
 
     // グラフィックのKey
-    const std::string graphic = "enemy1";
+    const std::string graphic = "enemy1-0";
 
   public:
     void act(int *x, int *y, int *dy);

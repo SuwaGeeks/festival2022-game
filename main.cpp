@@ -5,6 +5,7 @@
 #include <string>
 #include <vector>
 #include <utility>
+#include <iostream>
 #include "settings.hpp"
 #include "graphics.hpp"
 #include "bullet.hpp"
@@ -33,89 +34,106 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	loadGraphics();
 	SetDrawScreen(DX_SCREEN_BACK);
 
-	Ui gameCTL(highScore);
-	Player player(WINDOW_WIDTH/2, 700);
+	while(true){
+		Ui *gameCTL = new Ui(highScore);
+		Player player(WINDOW_WIDTH/2, 700);
 
-	// windowsが例外スロー または ESC入力　でループ終了
-	while(!CheckHitKey(KEY_INPUT_ESCAPE) && !(ProcessMessage() < 0) && player.remain >= 0){
-		ClearDrawScreen();
+		// windowsが例外スロー または ESC入力　でループ終了
+		while(!CheckHitKey(KEY_INPUT_ESCAPE) && !(ProcessMessage() < 0) && player.remain >= 0){
+			ClearDrawScreen();
 
-		// リスポーン処理
-		if(std::rand()%120 == 0)enemy_list.push_back(Enemy((rand()%2)? 0: WINDOW_WIDTH, rand()%ENEMY_SPAWN_BORDER, (rand()%7)-3, (rand()%4)));
-		
-		// 移動処理
-		int x, y, isShot;
-		for(auto itr = enemy_list.begin(); itr != enemy_list.end(); ++itr) {
-			(*itr).act(&x, &y, &isShot);
-			if(isShot)bullet_list.push_back(Bullet(x, y, 30.0, true));
-		}
-		for(auto itr = bullet_list.begin(); itr != bullet_list.end(); ++itr) {
-			(*itr).move();
-		}
-
-		// 自機処理
-		int pX, pY, pisShot;
-		player.act(&pX, &pY, &pisShot);
-		if(pisShot)bullet_list.push_back(Bullet(pX, pY, -30.0, false));
-
-		// 当たり判定 & デスポーン処理
-		int eX, eY, bX, bY, isEnemy;
-		for(auto b_itr = bullet_list.begin(); b_itr != bullet_list.end();){
-			(*b_itr).getXYF(&bX, &bY, &isEnemy);
-
-			// 弾が画面外
-			if(bX < 0 or bY < 0 or bX > WINDOW_WIDTH or bY > WINDOW_HEIGHT){
-				b_itr = bullet_list.erase(b_itr);
-				continue;
+			// リスポーン処理(今は適当)
+			if(std::rand()%50 == 0){
+				int side = rand()%2;
+				int esp_x, esp_y = rand()%ENEMY_SPAWN_BORDER, esp_dx, esp_dy = rand()%4;
+				if(side == 0){
+					esp_x = 0;
+					esp_dx = (rand()%4)+1;
+				}else{
+					esp_x = WINDOW_WIDTH;
+					esp_dx = -1*((rand()%4)+1);
+				}
+				enemy_list.push_back(Enemy(esp_x, esp_y, esp_dx, rand()%4));
 			}
 
-			// 時機の当たり判定
-			if(isEnemy && !(player.godTime) && (pX-bX)*(pX-bX)+(pY-bY)*(pY-bY) < (BULLET_CD+PLAYER_CD)*(BULLET_CD+PLAYER_CD)){
-				b_itr = bullet_list.erase(b_itr);
-				player.godTime = 60;
-				player.remain--;
-				continue;
+			// 移動処理
+			int x, y, isShot;
+			for(auto itr = enemy_list.begin(); itr != enemy_list.end(); ++itr) {
+				(*itr).act(&x, &y, &isShot);
+				if(isShot)bullet_list.push_back(Bullet(x, y, 5.0, true));
+			}
+			for(auto itr = bullet_list.begin(); itr != bullet_list.end(); ++itr) {
+				(*itr).move();
 			}
 
-			// 敵の消滅処理
-			for (auto e_itr = enemy_list.begin(); e_itr != enemy_list.end();){
-				(*e_itr).getXY(&eX, &eY);
+			// 自機処理
+			int pX, pY, pisShot;
+			player.act(&pX, &pY, &pisShot);
+			if(pisShot)bullet_list.push_back(Bullet(pX, pY, -30.0, false));
 
-				// 敵が画面外
-				if(eX < 0 or eY < 0 or eX > WINDOW_WIDTH or eY > WINDOW_HEIGHT){
-					e_itr = enemy_list.erase(e_itr);
+			// 当たり判定 & デスポーン処理
+			int eX, eY, bX, bY, isEnemy;
+			for(auto b_itr = bullet_list.begin(); b_itr != bullet_list.end();){
+				(*b_itr).getXYF(&bX, &bY, &isEnemy);
+
+				// 弾が画面外
+				if(bX < 0 or bY < 0 or bX > WINDOW_WIDTH or bY > WINDOW_HEIGHT){
+					b_itr = bullet_list.erase(b_itr);
 					continue;
 				}
 
-				// 敵の当たり判定処理
-				if(!isEnemy && (eX-bX)*(eX-bX)+(eY-bY)*(eY-bY) < (ENEMY_CD+BULLET_CD)*(BULLET_CD+PLAYER_CD)){
-					e_itr = enemy_list.erase(e_itr);
+				// 時機の当たり判定
+				if(isEnemy && !(player.godTime) && (pX-bX)*(pX-bX)+(pY-bY)*(pY-bY) < (BULLET_CD+PLAYER_CD)*(BULLET_CD+PLAYER_CD)){
 					b_itr = bullet_list.erase(b_itr);
-					gameCTL.renewScore(100);
-					break;
+					player.godTime = 60;
+					player.remain--;
+					continue;
 				}
-				e_itr++;
+
+				// 敵の消滅処理
+				for (auto e_itr = enemy_list.begin(); e_itr != enemy_list.end();){
+					(*e_itr).getXY(&eX, &eY);
+
+					// 敵が画面外
+					if(eX < 0 or eY < 0 or eX > WINDOW_WIDTH or eY > WINDOW_HEIGHT){
+						e_itr = enemy_list.erase(e_itr);
+						continue;
+					}
+
+					// 敵の当たり判定処理
+					if(!isEnemy && (eX-bX)*(eX-bX)+(eY-bY)*(eY-bY) < (ENEMY_CD+BULLET_CD)*(BULLET_CD+PLAYER_CD)){
+						e_itr = enemy_list.erase(e_itr);
+						b_itr = bullet_list.erase(b_itr);
+						gameCTL->renewScore(100);
+						break;
+					}
+					e_itr++;
+				}
+
+				b_itr++;
 			}
+			
 
-			b_itr++;
-    	}
-		
+			// 描画処理
+			for (auto enemy: enemy_list){
+				enemy.draw();
+			}
+			for (auto bullet: bullet_list){
+				bullet.draw();
+			}
+			player.draw();
+			gameCTL->draw();
 
-		// 描画処理
-		for (auto enemy: enemy_list){
-			enemy.draw();
+			ScreenFlip();
 		}
-		for (auto bullet: bullet_list){
-			bullet.draw();
-		}
-		player.draw();
-		gameCTL.draw();
-
-		ScreenFlip() ;
+		// ゲーム終了処理
+		gameCTL->waitResult();
+		gameCTL->getName();
+		gameCTL->showResult(scores, &highScore);
+		enemy_list.clear();
+		bullet_list.clear();
+		delete gameCTL;
 	}
-	// ゲーム終了処理
-	gameCTL.getName();
-	gameCTL.whowResult(scores);
 
 	// 終了処理
 	deleteGraphics();

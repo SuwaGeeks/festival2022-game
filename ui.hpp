@@ -31,10 +31,11 @@ class Ui{
     public:
         Ui(int);
         ~Ui();
+        void waitResult();
         void getName();
         void renewScore(int);
         void draw();
-        void whowResult(std::vector<std::pair<int, const char*>>& scores);
+        void showResult(std::vector<std::pair<int, const char*>>& scores, int* highScore);
 };
 
 #endif

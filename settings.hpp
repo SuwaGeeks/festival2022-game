@@ -10,9 +10,9 @@
 #define WINDOW_SCALE 1.0
 
 // 当たり判定範囲(半径)
-#define PLAYER_CD 50
-#define ENEMY_CD 50
-#define BULLET_CD 4
+#define PLAYER_CD 20
+#define ENEMY_CD 18
+#define BULLET_CD 2
 
 
 // 敵がすぽーんする最低y座標
