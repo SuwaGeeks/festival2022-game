@@ -7,9 +7,10 @@ class Enemy {
   private:
     double posX, posY, dx, dy;
     const int height = 48, width = 48;
+    int graphic_flag;
 
     // グラフィックのKey
-    const std::string graphic = "enemy1-0";
+    const std::string graphic[2] = {"enemy1-0", "enemy1-1"};
 
   public:
     void act(int *x, int *y, int *dy);

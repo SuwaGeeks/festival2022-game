@@ -1,5 +1,6 @@
 #include <Dxlib.h>
 #include <stdlib.h>
+#include <iostream>
 #include "enemy.hpp"
 #include "graphics.hpp"
 #include "settings.hpp"
@@ -10,6 +11,7 @@ Enemy::Enemy(double x, double y, double dx, double dy){
   this->posY = y;
   this->dx = dx;
   this->dy = dy;
+  this->graphic_flag = 0;
   // srand(time(NULL)); mainのはじめでやってるので消しました
 }
 
@@ -31,6 +33,11 @@ void Enemy::act(int *x, int *y, int *dy){
     *dy = 1;  // 弾を撃つならdyをフラグとして1にする。
     *x = (int)(this->posX);  *y = (int)(this->posY);
   }
+
+  // アニメーション用の処理
+  this->graphic_flag++;
+  if(this->graphic_flag > 60) {this->graphic_flag = 0;}
+  // std::cout << this->graphic_flag << std::endl;
 }
 
 // ゲッタ
@@ -41,5 +48,6 @@ void Enemy::getXY(int *x, int *y){
 
 // 描画関数
 void Enemy::draw(){
-  DrawGraph((int)(this->posX)-(this->width)/2 ,(int)(this->posY)-(this->height)/2 ,graphics[this->graphic] , TRUE);
+  DrawGraph((int)(this->posX)-(this->width)/2 ,(int)(this->posY)-(this->height)/2 ,graphics[this->graphic[this->graphic_flag > 30]] , TRUE);
+  // this->graphic_flag++;
 }
