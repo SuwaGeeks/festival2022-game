@@ -1,6 +1,7 @@
 #include <DxLib.h>
 #include <list>
 #include <ctime>
+#include <cmath>
 #include <cstdlib>
 #include <string>
 #include <vector>
@@ -20,7 +21,11 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	std::list<Bullet> bullet_list;
 	std::list<Enemy> enemy_list;
 
-	std::vector<std::pair<int, const char*>> scores(10, std::make_pair(0, "NO NAME"));
+	std::vector<std::pair<int, std::string>> scores = readScore();
+	// for(std::pair x: scores){
+    //     std::cout << x.first << " " << x.second << std::endl;
+    // }
+	for (int i = scores.size(); i < 10; i++)scores.push_back(std::make_pair(0, "NO NAME"));
 	int highScore = 0;	// ハイスコア
 
 	// 開始処理
@@ -36,14 +41,14 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
 	while(true){
 		Ui *gameCTL = new Ui(highScore);
-		Player player(WINDOW_WIDTH/2, 700);
+		Player player(WINDOW_WIDTH/2, 710);
 
 		// windowsが例外スロー または ESC入力　でループ終了
 		while(!CheckHitKey(KEY_INPUT_ESCAPE) && !(ProcessMessage() < 0) && player.remain >= 0){
 			ClearDrawScreen();
 
 			// リスポーン処理(今は適当)
-			if(std::rand()%40 == 0){
+			if(std::rand()%((int)(60*(1-sin(gameCTL->getScore()/100000.0)))) == 0){
 				int side = rand()%2;
 				int esp_x, esp_y = rand()%ENEMY_SPAWN_BORDER, esp_dx, esp_dy = rand()%4;
 				if(side == 0){
@@ -118,9 +123,9 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 
 					// 敵の当たり判定処理
 					if(!isEnemy && (eX-bX)*(eX-bX)+(eY-bY)*(eY-bY) < (ENEMY_CD+BULLET_CD)*(ENEMY_CD+BULLET_CD)){
+						gameCTL->renewScore((*e_itr).getScore(), eX, eY);
 						e_itr = enemy_list.erase(e_itr);
 						b_itr = bullet_list.erase(b_itr);
-						gameCTL->renewScore(100);
 						PlaySoundMem(sounds["e_break"] , DX_PLAYTYPE_BACK);
 						break;
 					}

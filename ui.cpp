@@ -5,8 +5,32 @@
 #include <vector>
 #include <string>
 #include <fstream>
+#include <sstream>
+#include <iostream>
+#include <list>
 #include "ui.hpp"
+#include "graphics.hpp"
 #include "settings.hpp"
+
+std::vector<std::string> split(std::string& input, char delimiter){
+    std::istringstream stream(input);
+    std::string field;
+    std::vector<std::string> result;
+    while (getline(stream, field, delimiter)) {
+        result.push_back(field);
+    }
+    return result;
+}
+
+std::vector<std::pair<int, std::string>> readScore(){
+    std::ifstream ifs("./result.csv");
+    std::string line;
+    std::vector<std::pair<int, std::string>> score_vec;
+    while(getline(ifs, line)) {
+        score_vec.push_back(make_pair(atoi(split(line, ',')[1].c_str()), split(line, ',')[0]));
+    }
+    return score_vec;
+} 
 
 Ui::Ui(int highScore){
     // 解像度、ビット深度を取得
@@ -35,6 +59,10 @@ Ui::Ui(int highScore){
 
 Ui::~Ui(){
     
+}
+
+int Ui::getScore(){
+    return this->score_1;
 }
 
 void Ui::waitResult(){
@@ -96,20 +124,20 @@ void Ui::getName(){
 		// 裏画面の内容を表画面に反映する
 		ScreenFlip() ;
 	}
-    this->name = string(name);
+    this->name = std::string(name);
 }
 
-void Ui::showResult(std::vector<std::pair<int, const char*>>& scores, int* highScore){
+void Ui::showResult(std::vector<std::pair<int, std::string>>& scores, int* highScore){
     const int topX = 100, topY = 100;
     const int score_center = (int)(0.50*(WINDOW_WIDTH)-GetDrawFormatStringWidth("%5s%10s%10s", "RANK","NAME","SCORE")/2);
 
-    scores.push_back(make_pair(this->score_1, (this->name).c_str()));
+    scores.push_back(std::make_pair(this->score_1, (this->name)));
 
     sort(scores.begin(), scores.end());
     reverse(scores.begin(), scores.end());
 
-    ofstream ofs("./result.csv", ios::app);
-    ofs << this->name << "," << this->score_1 << endl;
+    std::ofstream ofs("./result.csv", std::ios::app);
+    ofs << this->name << "," << this->score_1 << std::endl;
 
     ClearDrawScreen();
 
@@ -123,29 +151,43 @@ void Ui::showResult(std::vector<std::pair<int, const char*>>& scores, int* highS
         // スコア表を描画
         for (int i = 0; i < 10; i++){
             DrawBox(topX , topY+40*i, WINDOW_WIDTH-topX, topY+3+40*i, GetColor(225, 225, 225), true);
-            DrawFormatString(score_center, topY+40*i+5 , GetColor(255, 255, 255), "%3d%14s%3s%06d", i+1,scores[i].second, "", scores[i].first);
+            DrawFormatString(score_center, topY+40*i+5 , GetColor(255, 255, 255), "%3d%14s%3s%06d", i+1,scores[i].second.c_str(), "", scores[i].first);
         }
         i++;
         DrawBox(topX , topY+40*i, WINDOW_WIDTH-topX, topY+3+40*i, GetColor(225, 225, 225), true);
         DrawFormatString(score_center, 500 , GetColor(225, 0, 255), "YOU%14s%3s%06d" ,(this->name).c_str(), "", this->score_1);
 
+        DrawGraph(WINDOW_WIDTH/2-75, 600, graphics["qr"], FALSE);
+
+        int swampX = WINDOW_WIDTH/2 - GetDrawStringWidth("SWAMP QRCODE", strlen("SWAMP QRCODE"))/2;
+        DrawString(swampX, 760, "SWAMP QRCODE", GetColor(255, 255, 255));
 
         int InputChar = GetInputChar(true);
         if(InputChar != 0 && InputChar == CTRL_CODE_CR)break;
         if(InputChar != 0 && InputChar == CTRL_CODE_ESC)exit(0);
 
 		// 裏画面の内容を表画面に反映する
-		ScreenFlip() ;
+		ScreenFlip();
 	}
     *highScore = this->highScore;
 }
 
-void Ui::renewScore(int ds){
+void Ui::renewScore(int ds, int x, int y){
     this->score_1 += ds;
+    std::vector<int> data = {100, ds, x, y}; 
+    this->scoreEffect.push_back(data);
     this->highScore = std::max(score_1, highScore);
 }
 
 void Ui::draw(){
+
+    // スコアの残像を表示
+    for(auto itr = this->scoreEffect.begin(); itr != this->scoreEffect.end();){
+        DrawFormatString((*itr).at(2), (*itr).at(3), GetColor(2*(*itr).at(0), 2*(*itr).at(0), 2*(*itr).at(0)), "%d", (*itr).at(1));
+        (*itr).at(0)--;
+        if((*itr).at(0) == 0)itr = (this->scoreEffect).erase(itr);
+        else itr++;
+    }
 
     // 画面左から何%にスコアを表示するか
     this->sc1_x = (int)(0.25*(this->Sx))-GetDrawFormatStringWidth("%05d", this->score_1)/2;

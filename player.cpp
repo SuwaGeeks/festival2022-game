@@ -21,12 +21,20 @@ void Player::act(int *x, int *y, int *dy){
   // dyを初期化
   *dy = 0;
 
+  int padInputX, padInputY, PadInput = GetJoypadInputState(DX_INPUT_KEY_PAD1);
+  GetJoypadAnalogInput(&padInputX, &padInputY, DX_INPUT_KEY_PAD1);
+
   // 左右の移動(左右どちらも押している場合には停止する)
-  if(CheckHitKey(KEY_INPUT_LEFT) || CheckHitKey(KEY_INPUT_A)){
+  if(CheckHitKey(KEY_INPUT_LEFT) || CheckHitKey(KEY_INPUT_A) || (PadInput & PAD_INPUT_LEFT)){
     this->posX -= PLAYER_DELTA_X;
   }
-  if(CheckHitKey(KEY_INPUT_RIGHT) || CheckHitKey(KEY_INPUT_D)){
+
+  if(CheckHitKey(KEY_INPUT_RIGHT) || CheckHitKey(KEY_INPUT_D) ||(PadInput & PAD_INPUT_RIGHT)){
     this->posX += PLAYER_DELTA_X;
+  }
+  
+  if(abs(padInputX) > 100){
+    this->posX += (padInputX/2000.0)*PLAYER_DELTA_X;
   }
 
   // 境界処理
@@ -38,7 +46,7 @@ void Player::act(int *x, int *y, int *dy){
   }
 
   // 玉の発射
-  if(!shotIV && (CheckHitKey(KEY_INPUT_Z) || CheckHitKey(KEY_INPUT_SPACE))){
+  if(!shotIV && (CheckHitKey(KEY_INPUT_Z) || CheckHitKey(KEY_INPUT_SPACE) || (PadInput & PAD_INPUT_1))){
     *dy = 1;
     shotIV += 30;
   }
@@ -58,7 +66,9 @@ void Player::getXY(int *x, int *y){
 
 // 描画関数
 void Player::draw(){
-  DrawGraph((int)(this->posX)-(this->width)/2 ,(int)(this->posY)-(this->height)/2 ,graphics[this->graphic] , TRUE);
+  if(!(((this->godTime)/6)%2)){
+    DrawGraph((int)(this->posX)-(this->width)/2 ,(int)(this->posY)-(this->height)/2 ,graphics[this->graphic] , TRUE);
+  }
   for (int i = 0; i < remain; i++){
     DrawGraph(5+i*(this->width + 5), 745, graphics[this->graphic], true);
   }

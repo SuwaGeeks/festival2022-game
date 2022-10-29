@@ -2,8 +2,9 @@
 #define __UI_HPP_INCLUDED__
 
 #include <string>
+#include <list>
 
-using namespace std;
+std::vector<std::pair<int, std::string>> readScore();
 
 class Ui{
     private:
@@ -26,16 +27,19 @@ class Ui{
         int highScore;
 
         // プレイヤー名
-        string name;
+        std::string name;
+
+        std::list<std::vector<int>> scoreEffect;
 
     public:
         Ui(int);
         ~Ui();
+        int getScore();
         void waitResult();
         void getName();
-        void renewScore(int);
+        void renewScore(int ds, int x, int y);
         void draw();
-        void showResult(std::vector<std::pair<int, const char*>>& scores, int* highScore);
+        void showResult(std::vector<std::pair<int, std::string>>& scores, int* highScore);
 };
 
 #endif

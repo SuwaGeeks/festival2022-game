@@ -11,8 +11,8 @@
 
 // 当たり判定範囲(半径)
 #define PLAYER_CD 20
-#define ENEMY_CD 18
-#define BULLET_CD 2
+#define ENEMY_CD 22
+#define BULLET_CD 1
 
 
 // 敵がすぽーんする最低y座標

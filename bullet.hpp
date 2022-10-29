@@ -8,13 +8,15 @@ class Bullet{
         double x, y;
         double dy;
 
-        int width = 8, height = 24;
+        int width = 4, height = 12;
 
         // true:敵の弾, false:時機の弾
         bool isEnemy;
 
         // グラフィックのKey
         const std::string graphic = "bullet1";
+
+        int state;
 
     public:
 

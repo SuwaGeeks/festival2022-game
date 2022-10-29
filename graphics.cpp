@@ -21,6 +21,7 @@ void loadGraphics(){
     graphics["player2"] = LoadGraph("../assets/graphics/player/player2.png");
     graphics["player3"] = LoadGraph("../assets/graphics/player/player3.png");
     graphics["player4"] = LoadGraph("../assets/graphics/player/player4.png");
+
     graphics["enemy1-0"] = LoadGraph("../assets/graphics/enemys/enemy1-0.png");
     graphics["enemy1-1"] = LoadGraph("../assets/graphics/enemys/enemy1-1.png");
     graphics["enemy2-0"] = LoadGraph("../assets/graphics/enemys/enemy2-0.png");
@@ -28,7 +29,13 @@ void loadGraphics(){
     graphics["enemy3-0"] = LoadGraph("../assets/graphics/enemys/enemy3-0.png");
     graphics["enemy3-1"] = LoadGraph("../assets/graphics/enemys/enemy3-1.png");
     graphics["enemy4-0"] = LoadGraph("../assets/graphics/enemys/enemy4-0.png");
-    graphics["bullet1"] = LoadGraph("../assets/graphics/bullets/bullet1.png");
+
+    graphics["p_bullet1"] = LoadGraph("../assets/graphics/bullets/p_bullet1.png");
+    graphics["e_bullet-0"] = LoadGraph("../assets/graphics/bullets/e_bullet-0.png");
+    graphics["e_bullet-1"] = LoadGraph("../assets/graphics/bullets/e_bullet-1.png");
+
+    graphics["qr"] = LoadGraph("../assets/graphics/qr.png");
+
 }
 
 // プログラム終了時に実行
