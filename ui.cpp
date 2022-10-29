@@ -4,6 +4,7 @@
 #include <utility>
 #include <vector>
 #include <string>
+#include <fstream>
 #include "ui.hpp"
 #include "settings.hpp"
 
@@ -33,7 +34,7 @@ Ui::Ui(int highScore){
 }
 
 Ui::~Ui(){
-    // scvに追記
+    
 }
 
 void Ui::waitResult(){
@@ -107,9 +108,12 @@ void Ui::showResult(std::vector<std::pair<int, const char*>>& scores, int* highS
     sort(scores.begin(), scores.end());
     reverse(scores.begin(), scores.end());
 
+    ofstream ofs("./result.csv", ios::app);
+    ofs << this->name << "," << this->score_1 << endl;
+
     ClearDrawScreen();
 
-        // windowsが例外スローでループ終了
+    // windowsが例外スローでループ終了
 	while(!(ProcessMessage() < 0)){
 		// 裏画面を初期化(真っ黒にする)
 		ClearDrawScreen();
