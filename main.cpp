@@ -43,7 +43,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 			ClearDrawScreen();
 
 			// リスポーン処理(今は適当)
-			if(std::rand()%50 == 0){
+			if(std::rand()%40 == 0){
 				int side = rand()%2;
 				int esp_x, esp_y = rand()%ENEMY_SPAWN_BORDER, esp_dx, esp_dy = rand()%4;
 				if(side == 0){
@@ -54,6 +54,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 					esp_dx = -1*((rand()%4)+1);
 				}
 				enemy_list.push_back(Enemy(esp_x, esp_y, esp_dx, rand()%4));
+				// PlaySoundMem(sounds["appear"] , DX_PLAYTYPE_BACK);
 			}
 
 			// 移動処理
@@ -71,8 +72,22 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 			player.act(&pX, &pY, &pisShot);
 			if(pisShot)bullet_list.push_back(Bullet(pX, pY, -30.0, false));
 
+
+
 			// 当たり判定 & デスポーン処理
 			int eX, eY, bX, bY, isEnemy;
+			
+			// 敵と時機の当たり判定
+			for (auto e_itr = enemy_list.begin(); e_itr != enemy_list.end(); ++e_itr){
+				(*e_itr).getXY(&eX, &eY);
+				if(!(player.godTime) && (eX-pX)*(eX-pX)+(eY-pY)*(eY-pY) < (ENEMY_CD+PLAYER_CD)*(ENEMY_CD+PLAYER_CD)){
+					PlaySoundMem(sounds["p_break"] , DX_PLAYTYPE_BACK);
+					player.godTime = 60;
+					player.remain--;
+					continue;
+				}
+			}
+
 			for(auto b_itr = bullet_list.begin(); b_itr != bullet_list.end();){
 				(*b_itr).getXYF(&bX, &bY, &isEnemy);
 
@@ -82,8 +97,9 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 					continue;
 				}
 
-				// 時機の当たり判定
+				// 時機と弾の当たり判定
 				if(isEnemy && !(player.godTime) && (pX-bX)*(pX-bX)+(pY-bY)*(pY-bY) < (BULLET_CD+PLAYER_CD)*(BULLET_CD+PLAYER_CD)){
+					PlaySoundMem(sounds["p_break"] , DX_PLAYTYPE_BACK);
 					b_itr = bullet_list.erase(b_itr);
 					player.godTime = 60;
 					player.remain--;
@@ -101,10 +117,11 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 					}
 
 					// 敵の当たり判定処理
-					if(!isEnemy && (eX-bX)*(eX-bX)+(eY-bY)*(eY-bY) < (ENEMY_CD+BULLET_CD)*(BULLET_CD+PLAYER_CD)){
+					if(!isEnemy && (eX-bX)*(eX-bX)+(eY-bY)*(eY-bY) < (ENEMY_CD+BULLET_CD)*(ENEMY_CD+BULLET_CD)){
 						e_itr = enemy_list.erase(e_itr);
 						b_itr = bullet_list.erase(b_itr);
 						gameCTL->renewScore(100);
+						PlaySoundMem(sounds["e_break"] , DX_PLAYTYPE_BACK);
 						break;
 					}
 					e_itr++;

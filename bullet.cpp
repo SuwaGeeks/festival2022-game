@@ -7,10 +7,15 @@ Bullet::Bullet(int x, int y, double dy, bool isEnemy){
     this->y = (double)y;
     this->dy = dy;
     this->isEnemy = isEnemy;
+    if(isEnemy){
+        // PlaySoundMem(sounds["e_shot"] , DX_PLAYTYPE_BACK);
+    }else{
+        PlaySoundMem(sounds["p_shot"] , DX_PLAYTYPE_BACK);
+    }
 }
 
 Bullet::~Bullet(){
-
+    
 }
 
 void Bullet::getXYF(int *x, int *y, int *isEnemy){

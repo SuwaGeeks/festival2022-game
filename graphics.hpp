@@ -6,6 +6,7 @@
 #include <string>
 
 extern std::map<std::string, int> graphics;
+extern std::map<std::string, int> sounds;
 
 void loadGraphics();
 

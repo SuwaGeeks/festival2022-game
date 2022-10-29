@@ -12,11 +12,23 @@ Enemy::Enemy(double x, double y, double dx, double dy){
   this->dx = dx;
   this->dy = dy;
   this->graphic_flag = 0;
-  // srand(time(NULL)); mainのはじめでやってるので消しました
+  srand(time(NULL));
+  int eType = (rand()%3);
+  if(eType == 0){
+    this->graphic[0] = "enemy1-0";
+    this->graphic[1] = "enemy1-1";
+  }else if(eType ==1){
+    this->graphic[0] = "enemy2-0";
+    this->graphic[1] = "enemy2-1";
+  }else if(eType ==2){
+    this->graphic[0] = "enemy3-0";
+    this->graphic[1] = "enemy3-1";
+  }
 }
 
 // デストラクタ
-Enemy::~Enemy(){ }
+Enemy::~Enemy(){
+}
 
 // 敵の行動
 void Enemy::act(int *x, int *y, int *dy){

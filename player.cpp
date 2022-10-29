@@ -40,7 +40,7 @@ void Player::act(int *x, int *y, int *dy){
   // 玉の発射
   if(!shotIV && (CheckHitKey(KEY_INPUT_Z) || CheckHitKey(KEY_INPUT_SPACE))){
     *dy = 1;
-    shotIV += 60;
+    shotIV += 30;
   }
 
   // 無敵時間の更新
