@@ -58,7 +58,7 @@ void Player::getXY(int *x, int *y){
 
 // 描画関数
 void Player::draw(){
-  DrawGraph((int)(this->posX)-(this->width)/2 ,(int)(this->posY)-(this->height)/2 ,graphics[this->graphic] , FALSE);
+  DrawGraph((int)(this->posX)-(this->width)/2 ,(int)(this->posY)-(this->height)/2 ,graphics[this->graphic] , TRUE);
   for (int i = 0; i < remain; i++){
     DrawGraph(5+i*(this->width + 5), 745, graphics[this->graphic], true);
   }

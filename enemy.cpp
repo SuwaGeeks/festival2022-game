@@ -41,5 +41,5 @@ void Enemy::getXY(int *x, int *y){
 
 // 描画関数
 void Enemy::draw(){
-  DrawGraph((int)(this->posX)-(this->width)/2 ,(int)(this->posY)-(this->height)/2 ,graphics[this->graphic] , true);
+  DrawGraph((int)(this->posX)-(this->width)/2 ,(int)(this->posY)-(this->height)/2 ,graphics[this->graphic] , TRUE);
 }

@@ -24,6 +24,6 @@ void Bullet::move(){
 }
 
 void Bullet::draw(){
-    DrawGraph((int)(this->x)-(this->width)/2 ,(int)(this->y)-(this->height)/2  ,graphics[this->graphic] , FALSE) ;
+    DrawGraph((int)(this->x)-(this->width)/2 ,(int)(this->y)-(this->height)/2  ,graphics[this->graphic] , TRUE) ;
 }
 
